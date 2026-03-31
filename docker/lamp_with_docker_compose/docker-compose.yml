@@ -1,0 +1,44 @@
+# Format du fichier Compose
+version: '3.7'
+
+# Liste des conteneurs de notre application
+services:
+
+    # Service de la base de donnée
+    db:
+        image: mysql:5.7
+        container_name: mysql_c
+        # Redémarre automatiquement le conteneur en cas de redémarrage du serveur
+        restart: always
+        volumes:
+            # Volume pour sauvegarder les données de la base de données
+            - db-volume:/var/lib/mysql
+            # Volume pour exécuter automatiquement le fichier sql
+            - ./db:/docker-entrypoint-initdb.d
+        environment:
+            MYSQL_ROOT_PASSWORD: test
+            MYSQL_DATABASE: test
+            MYSQL_USER: test
+            MYSQL_PASSWORD: test
+
+    # Service de l'application Web
+    app:
+        # Se base sur l'image myapp construit depuis le Dockerfile
+        image: my_app
+        container_name: myapp_c
+        restart: always
+        volumes:
+            # Volume pour sauvegarder les sources de l'application
+            - ./app:/var/www/html
+        # Mapping du port 8000 sur le port 80
+        ports:
+            - 8000:80
+        # Définit un dépendance entre le service app et db
+        # -> le service db est démarré avec le service app
+        # -> le service app est arrêté avant le service app
+        depends_on:
+            - db
+
+# Création du volume utilisé pour stocker les données de la base de données
+volumes:
+    db-volume:

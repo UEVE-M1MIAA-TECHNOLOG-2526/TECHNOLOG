@@ -1,0 +1,15 @@
+# Contruction de l'image à partir du Dockerfile (épuré par raport au précédent)
+# Celle-ci contient une couche OS, Apache et Php
+# Remarque : l'image se base sur une image officielle php avec le tag 8.0.11-apache qui vient déjà avec un OS
+# Remarque2 : l'image mysql sera utilisé dans le fichier docker-compose.yml
+
+docker build -t myapp .
+
+
+#################################
+# Lancement sans docker-compose #
+#################################
+
+
+docker-compose up -d
+

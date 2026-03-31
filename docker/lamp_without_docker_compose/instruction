@@ -1,0 +1,32 @@
+# Contruction de l'image à partir du Dockerfile (épuré par raport au précédent)
+# Celle-ci contient une couche OS, Apache et Php
+# Remarque : l'image se base sur une image officielle php avec le tag 8.0.11-apache qui vient déjà avec un OS
+# Remarque2 : l'image mysql sera utilisé dans le fichier docker-compose.yml
+
+docker build -t myapp .
+
+#################################
+# Lancement sans docker-compose #
+#################################
+
+# Lancement du conteneur de la base de données
+# Note : le dernier volume est une astuce pour créer automatiquement la table SQL.
+#        -> lorsqu'un conteneur mysql démarre, il exécute les fichiers d'extensions ".sh" et ".sql" dans /docker-entrypoint-initdb.d
+
+docker run -d -e MYSQL_ROOT_PASSWORD='test' \
+    -e MYSQL_DATABASE='test' \
+    -e MYSQL_USER='test' \
+    -e MYSQL_PASSWORD='test' \
+    --volume db-volume:/var/lib/mysql \
+    --volume $PWD/articles.sql:/docker-entrypoint-initdb.d/articles.sql \
+    --name mysql_c mysql:5.7
+
+# Lancement du conteneur de l'application web
+
+# Pour windows avec gitbash
+docker run -d -v "$(pwd -W)/app:/var/www/html" -p 8000:80 --link mysql_c --name myapp_c myapp
+# Pour windows avec powershell
+docker run -d -v "$(PWD)/app:/var/www/html" -p 8000:80 --link mysql_c --name myapp_c myapp
+# Pour linux et mac
+docker run -d --volume $PWD/app:/var/www/html -p 8000:80 --link mysql_c --name myapp_c myapp
+
