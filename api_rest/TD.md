@@ -38,7 +38,7 @@ def write_json(json_path, data):
 
 **Indications** : vous utiliserez deux conteneurs, le premier initialisera le fichier JSON, le second exposera l'API Rest sur le port 3000. Utilisez un volume partagé entre les deux contenurs. Il est attendu que votre modèle soit défini dans un fichier `model_patient.py`, que votre application RestAPI soit définie dans un fichier `app.py`.
 
-**Note** : utilisez des `validator` pour vous assurer que le *ssn* est valide (https://pydantic-docs.helpmanual.io/usage/validators/).
+**Note** : utilisez des `validator` pour vous assurer que le *ssn* est valide (https://pydantic.dev/docs/validation/latest/concepts/validators).
 
 # Exercice 2 - Paramétrisation
 
